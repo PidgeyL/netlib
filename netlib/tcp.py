@@ -348,7 +348,7 @@ def close_socket(sock):
             sock.settimeout(sock.gettimeout() or 20)
 
             # limit at a megabyte so that we don't read infinitely
-            for _ in xrange(1024 ** 3 // 4096):
+            for _ in range(1024 ** 3 // 4096):
                 # may raise a timeout/disconnect exception.
                 if not sock.recv(4096):
                     break

@@ -1,4 +1,4 @@
-import cStringIO
+import io
 import tempfile
 import os
 import time
@@ -12,7 +12,7 @@ def treader(bytes):
     """
         Construct a tcp.Read object from bytes.
     """
-    fp = cStringIO.StringIO(bytes)
+    fp = io.StringIO(bytes)
     return tcp.Reader(fp)
 
 
@@ -46,7 +46,7 @@ def raises(exc, obj, *args, **kwargs):
     try:
         ret = obj(*args, **kwargs)
     except Exception as v:
-        if isinstance(exc, basestring):
+        if isinstance(exc, str):
             if exc.lower() in str(v).lower():
                 return
             else:

@@ -3,7 +3,7 @@ import binascii
 import collections
 import string
 import sys
-import urlparse
+import urllib.parse
 import time
 
 from netlib import odict, utils, tcp, http

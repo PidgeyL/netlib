@@ -1,8 +1,8 @@
 from __future__ import (absolute_import, print_function, division)
 import os.path
 import cgi
-import urllib
-import urlparse
+import urllib.request, urllib.parse, urllib.error
+import urllib.parse
 import string
 
 
@@ -87,7 +87,7 @@ class BiDi(object):
     def __init__(self, **kwargs):
         self.names = kwargs
         self.values = {}
-        for k, v in kwargs.items():
+        for k, v in list(kwargs.items()):
             self.values[v] = k
         if len(self.names) != len(self.values):
             raise ValueError("Duplicate values not allowed.")
@@ -164,7 +164,7 @@ def parse_url(url):
             path is valid ASCII
     """
     try:
-        scheme, netloc, path, params, query, fragment = urlparse.urlparse(url)
+        scheme, netloc, path, params, query, fragment = urllib.parse.urlparse(url)
     except ValueError:
         return None
     if not scheme:
@@ -186,7 +186,7 @@ def parse_url(url):
             port = 443
         else:
             port = 80
-    path = urlparse.urlunparse(('', '', path, params, query, fragment))
+    path = urllib.parse.urlunparse(('', '', path, params, query, fragment))
     if not path.startswith("/"):
         path = "/" + path
     if not is_valid_host(host):
@@ -232,7 +232,7 @@ def urlencode(s):
         Takes a list of (key, value) tuples and returns a urlencoded string.
     """
     s = [tuple(i) for i in s]
-    return urllib.urlencode(s, False)
+    return urllib.parse.urlencode(s, False)
 
 def urldecode(s):
     """

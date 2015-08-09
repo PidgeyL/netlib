@@ -133,16 +133,16 @@ class HTTP2Protocol(semantics.ProtocolMixin):
 
         headers = request.headers.copy()
 
-        if not ':authority' in headers.keys():
+        if not ':authority' in list(headers.keys()):
             headers.add(':authority', bytes(authority), prepend=True)
-        if not ':scheme' in headers.keys():
+        if not ':scheme' in list(headers.keys()):
             headers.add(':scheme', bytes(request.scheme), prepend=True)
-        if not ':path' in headers.keys():
+        if not ':path' in list(headers.keys()):
             headers.add(':path', bytes(request.path), prepend=True)
-        if not ':method' in headers.keys():
+        if not ':method' in list(headers.keys()):
             headers.add(':method', bytes(request.method), prepend=True)
 
-        headers = headers.items()
+        headers = list(headers.items())
 
         if hasattr(request, 'stream_id'):
             stream_id = request.stream_id
@@ -158,10 +158,10 @@ class HTTP2Protocol(semantics.ProtocolMixin):
 
         headers = response.headers.copy()
 
-        if not ':status' in headers.keys():
+        if not ':status' in list(headers.keys()):
             headers.add(':status', bytes(str(response.status_code)), prepend=True)
 
-        headers = headers.items()
+        headers = list(headers.items())
 
         if hasattr(response, 'stream_id'):
             stream_id = response.stream_id
@@ -250,7 +250,7 @@ class HTTP2Protocol(semantics.ProtocolMixin):
         return self.current_stream_id
 
     def _apply_settings(self, settings, hide=False):
-        for setting, value in settings.items():
+        for setting, value in list(settings.items()):
             old_value = self.http2_settings[setting]
             if not old_value:
                 old_value = '-'

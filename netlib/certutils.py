@@ -312,7 +312,7 @@ class CertStore(object):
         potential_keys.append((commonname, tuple(sans)))
 
         name = next(
-            itertools.ifilter(
+            filter(
                 lambda key: key in self.certs,
                 potential_keys),
             None)

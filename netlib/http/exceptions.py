@@ -16,7 +16,7 @@ class HttpAuthenticationError(Exception):
             "Proxy Authentication Required"
         )
         if isinstance(auth_headers, dict):
-            auth_headers = odict.ODictCaseless(auth_headers.items())
+            auth_headers = odict.ODictCaseless(list(auth_headers.items()))
         self.headers = auth_headers
         self.code = 407
 

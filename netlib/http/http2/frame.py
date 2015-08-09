@@ -3,6 +3,7 @@ import struct
 from hpack.hpack import Encoder, Decoder
 
 from .. import utils
+from functools import reduce
 
 
 class FrameSizeError(Exception):
@@ -80,7 +81,7 @@ class Frame(object):
         stream_id = fields[4]
 
         if raw_header[:4] == b'HTTP':  # pragma no cover
-            print >> sys.stderr, "WARNING: This looks like an HTTP/1 connection!"
+            print("WARNING: This looks like an HTTP/1 connection!", file=sys.stderr)
 
         cls._check_frame_size(length, state)
 
@@ -369,7 +370,7 @@ class SettingsFrame(Frame):
     def from_bytes(cls, state, length, flags, stream_id, payload):
         f = cls(state=state, length=length, flags=flags, stream_id=stream_id)
 
-        for i in xrange(0, len(payload), 6):
+        for i in range(0, len(payload), 6):
             identifier, value = struct.unpack("!HL", payload[i:i + 6])
             f.settings[identifier] = value
 
@@ -381,7 +382,7 @@ class SettingsFrame(Frame):
                 'SETTINGS frames MUST NOT be associated with a stream.')
 
         b = b''
-        for identifier, value in self.settings.items():
+        for identifier, value in list(self.settings.items()):
             b += struct.pack("!HL", identifier & 0xFF, value)
 
         return b
@@ -389,7 +390,7 @@ class SettingsFrame(Frame):
     def payload_human_readable(self):
         s = []
 
-        for identifier, value in self.settings.items():
+        for identifier, value in list(self.settings.items()):
             s.append("%s: %#x" % (self.SETTINGS.get_name(identifier), value))
 
         if not s:

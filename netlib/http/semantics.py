@@ -3,8 +3,8 @@ import binascii
 import collections
 import string
 import sys
-import urllib
-import urlparse
+import urllib.request, urllib.parse, urllib.error
+import urllib.parse
 
 from .. import utils, odict
 from . import cookies
@@ -205,8 +205,8 @@ class Request(object):
 
             Components are unquoted.
         """
-        _, _, path, _, _, _ = urlparse.urlparse(self.url)
-        return [urllib.unquote(i) for i in path.split("/") if i]
+        _, _, path, _, _, _ = urllib.parse.urlparse(self.url)
+        return [urllib.parse.unquote(i) for i in path.split("/") if i]
 
     def set_path_components(self, lst):
         """
@@ -214,10 +214,10 @@ class Request(object):
 
             Components are quoted.
         """
-        lst = [urllib.quote(i, safe="") for i in lst]
+        lst = [urllib.parse.quote(i, safe="") for i in lst]
         path = "/" + "/".join(lst)
-        scheme, netloc, _, params, query, fragment = urlparse.urlparse(self.url)
-        self.url = urlparse.urlunparse(
+        scheme, netloc, _, params, query, fragment = urllib.parse.urlparse(self.url)
+        self.url = urllib.parse.urlunparse(
             [scheme, netloc, path, params, query, fragment]
         )
 
@@ -225,7 +225,7 @@ class Request(object):
         """
             Gets the request query string. Returns an ODict object.
         """
-        _, _, _, _, query, _ = urlparse.urlparse(self.url)
+        _, _, _, _, query, _ = urllib.parse.urlparse(self.url)
         if query:
             return odict.ODict(utils.urldecode(query))
         return odict.ODict([])
@@ -234,9 +234,9 @@ class Request(object):
         """
             Takes an ODict object, and sets the request query string.
         """
-        scheme, netloc, path, params, _, fragment = urlparse.urlparse(self.url)
+        scheme, netloc, path, params, _, fragment = urllib.parse.urlparse(self.url)
         query = utils.urlencode(odict.lst)
-        self.url = urlparse.urlunparse(
+        self.url = urllib.parse.urlunparse(
             [scheme, netloc, path, params, query, fragment]
         )
 
